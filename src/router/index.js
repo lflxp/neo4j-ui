@@ -56,6 +56,12 @@ export const constantRouterMap = [
         name: 'Tree',
         component: () => import('@/views/tree/index'),
         meta: { title: 'Tree', icon: 'tree' }
+      },
+      {
+        path: 'neo4j',
+        name: 'Neo4j',
+        component: () => import('@/views/neo4j/index'),
+        meta: { title: 'Neo4j', icon: 'tree' }
       }
     ]
   },
