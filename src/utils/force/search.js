@@ -22,7 +22,7 @@ export default class Force {
             height,
         } = this.config
         //创建svg
-        this.svg = d3.select(selector).append('svg')
+        this.svg = d3.select(selector).select('svg')
             .attr('width',width)
             .attr('height',height)
         this.g = this.svg.append('g')
@@ -48,32 +48,7 @@ export default class Force {
             height
         } = this.config
         //新建一个力导向图
-        this.forceSimulation = d3.forceSimulation()
-          .force("link",d3.forceLink())
-          .force("charge",d3.forceManyBody().strength(-300)) // 设置作用力
-          .force("center",d3.forceCenter(width / 2, height / 2));
-          
-        //初始化力导向图，也就是传入数据
-        //生成节点数据
-        this.forceSimulation.nodes(this.nodes)
-          .on("tick",this.ticked);//这个函数很重要，后面给出具体实现和说明
-        //生成边数据
-        this.forceSimulation.force("link")
-          .links(this.edges)
-          .distance(function(d){//每一边的长度
-            return d.value*200;
-          })    	
-        console.log(width,height)
-        //设置图形的中心位置	
-        this.forceSimulation.force("center")
-          .x(width/2)
-          .y(height/2);
-        //在浏览器的控制台输出
-        // console.log(this.nodes);
-        // console.log(this.links);
-        // edges.forEach(data=>{
-        //   console.log('source',data.source.index,'target',data.target.index)
-        // })
+        
 
         this.svg.call(d3.zoom()
             .scaleExtent([0.1,10])
@@ -102,7 +77,9 @@ export default class Force {
             .append("line")
             .attr("class","link")
             .attr("stroke",function(d,i){
-                return colorScale(i);
+                return d3.scaleOrdinal()
+                .domain(d3.range(i.length))
+                .range(d3.schemeCategory10)
                 })
             .attr("stroke-width",2)
             .attr("marker-end","url(#marker)");
@@ -157,15 +134,41 @@ export default class Force {
                 d3.selectAll("tr." + d.name).style("background-color", "white");
                 //}
             });
+            this.forceSimulation = d3.forceSimulation()
+          .force("link",d3.forceLink())
+          .force("charge",d3.forceManyBody().strength(-300)) // 设置作用力
+          .force("center",d3.forceCenter(width / 2, height / 2));
+          
+        //初始化力导向图，也就是传入数据
+        //生成节点数据
+        this.forceSimulation.nodes(this.nodes)
+          .on("tick",this.ticked());//这个函数很重要，后面给出具体实现和说明
+        //生成边数据
+        this.forceSimulation.force("link")
+          .links(this.edges)
+          .distance(function(d){//每一边的长度
+            return d.value*200;
+          })    	
+        console.log(width,height)
+        //设置图形的中心位置	
+        this.forceSimulation.force("center")
+          .x(width/2)
+          .y(height/2);
+        //在浏览器的控制台输出
+        // console.log(this.nodes);
+        // console.log(this.links);
+        // edges.forEach(data=>{
+        //   console.log('source',data.source.index,'target',data.target.index)
+        // })
             this.circleDraw()
     }
     circleDraw() {
         //绘制节点
         this.node.append("circle")
             .attr("r",30)
-            .attr("fill",function(d, i) {
-                  return this.colorScale(i)
-              })
+            // .attr("fill",function(d, i) {
+            //       return this.colorScale(i)
+            //   })
             .attr('fill-opacity',0.5)
           //.attr("fill",function(d,i){
           //	return colorScale(i);
@@ -194,13 +197,13 @@ export default class Force {
             .data(this.nodes).exit().remove();
     }
     ticked() {
-        links
+        this.links
             .attr("x1",function(d){return d.source.x;})
             .attr("y1",function(d){return d.source.y;})
             .attr("x2",function(d){return d.target.x;})
             .attr("y2",function(d){return d.target.y;});
           
-        linksText.attr("x",function(d){
+        this.linksText.attr("x",function(d){
           return (d.source.x+d.target.x)/2;
         })
         .attr("y",function(d){
@@ -210,7 +213,8 @@ export default class Force {
         
         // .attr("cx", function(d) { return d.x*2; })
         // .attr("cy", function(d) { return d.y*2; })
-        node.attr("transform",function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        // this.node.attr("transform",function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        this.node.attr("transform",function(d) { return "translate(" + 300 + "," + 300 + ")"; });
       
     }
     started(d){
