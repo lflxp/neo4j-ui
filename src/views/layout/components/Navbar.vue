@@ -13,6 +13,11 @@
             Home
           </el-dropdown-item>
         </router-link>
+        <el-dropdown-item>
+          <a  target="_blank" href="https://neo4j.com/docs/cypher-refcard/3.5/" >
+            <span class="a-inner"  ><i class="el-icon-document"></i>跳转demo</span>
+          </a>
+        </el-dropdown-item>
         <el-dropdown-item divided>
           <span style="display:block;" @click="logout">LogOut</span>
         </el-dropdown-item>

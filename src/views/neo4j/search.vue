@@ -385,34 +385,59 @@ RETURN tom, m, coActors, m2, cruise` },
           { "value": "MATCH (n) RETURN n" },
           { "value": "**慎用 MATCH (n) DETACH DELETE n**" },
           { "value": "MATCH (n) RETURN count(n)" },
-          { "value": "纵食", "address": "元丰天山花园(东门) 双流路267号" },
-          { "value": "钱记", "address": "上海市长宁区天山西路" },
-          { "value": "壹杯加", "address": "上海市长宁区通协路" },
-          { "value": "唦哇嘀咖", "address": "上海市长宁区新泾镇金钟路999号2幢（B幢）第01层第1-02A单元" },
-          { "value": "爱茜茜里(西郊百联)", "address": "长宁区仙霞西路88号1305室" },
-          { "value": "爱茜茜里(近铁广场)", "address": "上海市普陀区真北路818号近铁城市广场北区地下二楼N-B2-O2-C商铺" },
-          { "value": "鲜果榨汁（金沙江路和美广店）", "address": "普陀区金沙江路2239号金沙和美广场B1-10-6" },
-          { "value": "开心丽果（缤谷店）", "address": "上海市长宁区威宁路天山路341号" },
-          { "value": "超级鸡车（丰庄路店）", "address": "上海市嘉定区丰庄路240号" },
-          { "value": "妙生活果园（北新泾店）", "address": "长宁区新渔路144号" },
-          { "value": "香宜度麻辣香锅", "address": "长宁区淞虹路148号" },
-          { "value": "凡仔汉堡（老真北路店）", "address": "上海市普陀区老真北路160号" },
-          { "value": "港式小铺", "address": "上海市长宁区金钟路968号15楼15-105室" },
-          { "value": "蜀香源麻辣香锅（剑河路店）", "address": "剑河路443-1" },
-          { "value": "北京饺子馆", "address": "长宁区北新泾街道天山西路490-1号" },
-          { "value": "饭典*新简餐（凌空SOHO店）", "address": "上海市长宁区金钟路968号9号楼地下一层9-83室" },
-          { "value": "焦耳·川式快餐（金钟路店）", "address": "上海市金钟路633号地下一层甲部" },
-          { "value": "动力鸡车", "address": "长宁区仙霞西路299弄3号101B" },
-          { "value": "浏阳蒸菜", "address": "天山西路430号" },
-          { "value": "四海游龙（天山西路店）", "address": "上海市长宁区天山西路" },
-          { "value": "樱花食堂（凌空店）", "address": "上海市长宁区金钟路968号15楼15-105室" },
-          { "value": "壹分米客家传统调制米粉(天山店)", "address": "天山西路428号" },
-          { "value": "福荣祥烧腊（平溪路店）", "address": "上海市长宁区协和路福泉路255弄57-73号" },
-          { "value": "速记黄焖鸡米饭", "address": "上海市长宁区北新泾街道金钟路180号1层01号摊位" },
-          { "value": "红辣椒麻辣烫", "address": "上海市长宁区天山西路492号" },
-          { "value": "(小杨生煎)西郊百联餐厅", "address": "长宁区仙霞西路88号百联2楼" },
-          { "value": "阳阳麻辣烫", "address": "天山西路389号" },
-          { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }
+          { "value": "MATCH ()-->() RETURN count(*);" },
+          { "value": `MATCH (n) WHERE rand() <= 0.1
+RETURN
+DISTINCT labels(n),
+count(*) AS SampleSize,
+avg(size(keys(n))) as Avg_PropertyCount,
+min(size(keys(n))) as Min_PropertyCount,
+max(size(keys(n))) as Max_PropertyCount,
+avg(size( (n)-[]-() ) ) as Avg_RelationshipCount,
+min(size( (n)-[]-() ) ) as Min_RelationshipCount,
+max(size( (n)-[]-() ) ) as Max_RelationshipCount` },
+          { "value": "CALL db.labels()" },
+          { "value": "CALL db.schema()" },
+          { "value": "CALL db.relationshipTypes()" },
+          { "value": "CALL dbms.procedures()" },
+          { "value": "CALL dbms.functions()" },
+          { "value": "CALL db.awaitIndex(':Person(name)')" },
+          { "value": "CALL db.resampleIndex(':Person(name)')" },
+          { "value": `LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/categories.csv" AS row
+CREATE (n:Category)
+SET n = row` },
+          { "value": `LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/products.csv" AS row
+CREATE (n:Product)
+SET n = row,
+  n.unitPrice = toFloat(row.unitPrice),
+  n.unitsInStock = toInteger(row.unitsInStock), n.unitsOnOrder = toInteger(row.unitsOnOrder),
+  n.reorderLevel = toInteger(row.reorderLevel), n.discontinued = (row.discontinued <> "0")`},
+          { "value": `LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/suppliers.csv" AS row
+CREATE (n:Supplier)
+SET n = row`},
+          { "value": `CREATE INDEX ON :Category(categoryID)`},
+          { "value": `CREATE INDEX ON :Supplier(supplierID)`},
+          { "value": `CREATE INDEX ON :Product(productID)`},
+          { "value": `MATCH (p:Product),(c:Category)
+WHERE p.categoryID = c.categoryID
+CREATE (p)-[:PART_OF]->(c)`},
+          { "value": `MATCH (p:Product),(s:Supplier)
+WHERE p.supplierID = s.supplierID
+CREATE (s)-[:SUPPLIES]->(p)`},
+          { "value": `MATCH (s:Supplier)-->(:Product)-->(c:Category)
+RETURN s.companyName as Company, collect(distinct c.categoryName) as Categories`},
+          { "value": `MATCH (c:Category {categoryName:"Produce"})<--(:Product)<--(s:Supplier)
+RETURN DISTINCT s.companyName as ProduceSuppliers`},
+          { "value": `LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/order-details.csv" AS row
+MATCH (p:Product), (o:Order)
+WHERE p.productID = row.productID AND o.orderID = row.orderID
+CREATE (o)-[details:ORDERS]->(p)
+SET details = row,
+  details.quantity = toInteger(row.quantity)`},
+          { "value": `MATCH (cust:Customer)-[:PURCHASED]->(:Order)-[o:ORDERS]->(p:Product),
+      (p)-[:PART_OF]->(c:Category {categoryName:"Produce"})
+RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProductsPurchased`},
+          { "value": ``},
         ];
       },
     createFilter(queryString) {
