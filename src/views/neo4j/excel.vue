@@ -181,11 +181,11 @@
         // }
         var rs = []
         data.forEach((item,index)=>{
-            console.log(JSON.stringify(item))
+            // console.log(JSON.stringify(item))
             rs.push('(:'+ this.input +this.quickCql(item)+')')
         })
         this.currentCql = 'create '+rs.join(',')
-        console.log(this.currentCql)
+        // console.log(this.currentCql)
       },
       update() {
           if (this.currentCql != '' && this.input != '' ) {
