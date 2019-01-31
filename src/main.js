@@ -11,13 +11,16 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router'
 import store from './store'
+import * as d3 from 'd3'
 
 import '@/icons' // icon
-import '@/permission' // permission control
+// import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
+
+Object.defineProperty(Vue.prototype,'$d3',{value: d3});
 
 new Vue({
   el: '#app',

@@ -185,8 +185,6 @@ export default {
 
             edges = data.data.links
 
-            console.log('edges',edges)
-
             if (data.data.str.length != 0) {
                 this.svg_span = this.svg_span - 6
                 this.str_span = 6
@@ -339,17 +337,6 @@ export default {
                     return colorScale(i)
                 })
                 .attr('fill-opacity',0.5)
-                // .on('click',function(node){
-                //     //单击时让连接线加粗
-                //     links.style("stroke-width",function(line){
-                //         console.log(line);
-                //         if(line.source.name==node.name || line.target.name==node.name){
-                //             return 4;
-                //         }else{
-                //             return 0.5;
-                //         }
-                //     });
-                // });
             //文字
             gs.append('text')
                 .attr('x', -10)
