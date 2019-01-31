@@ -331,7 +331,7 @@ export default {
             .attr('orient', 'auto')
             .append('svg:path')
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill","brown");
+            .attr("fill","#000000");
  
         //2.设置一个color的颜色比例尺，为了让不同的扇形呈现不同的颜色
         var colorScale = d3
