@@ -415,10 +415,13 @@ export default {
             .data(edges)
             .enter()
             .append('line')
+            .attr('class','link')
             .attr('stroke', function(d, i) {
                 return colorScale(i)
             })
             .attr('stroke-width', 1)
+            .attr("marker-end", "url(#marker)" );
+
         links.attr('class','link')
           .on('mouseover.fade',linkFade(0.1))
           .on('mouseover.tooltip',function(d){
@@ -685,4 +688,8 @@ export default {
 	  stroke: #777;
 	  stroke-width: 1px;
 	}
+
+.link.marker {
+  stroke-dasharray: 0,2 1;
+}
 </style>
