@@ -323,13 +323,15 @@ export default {
           svg.append("svg:defs")
             .append("svg:marker")
             .attr("id", "marker")
+            .attr("markerUnits","userSpaceOnUse")
             .attr('viewBox', '0 -5 10 10')
             .attr("refX", 20)
             .attr("refY",0)
-            .attr('markerWidth', 10)
-            .attr('markerHeight', 10)
+            .attr('markerWidth', 12)
+            .attr('markerHeight', 12)
             .attr('orient', 'auto')
-            .append('svg:path')
+            .attr("stroke-width",4)//箭头宽度
+            .append('path')
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill","#000000");
  
@@ -416,10 +418,11 @@ export default {
             .enter()
             .append('line')
             .attr('class','link')
-            .attr('stroke', function(d, i) {
+            .style('stroke', function(d, i) {
                 return colorScale(i)
             })
-            .attr('stroke-width', 1)
+            .style('pointer-events','none')
+            .style('stroke-width', 0.5)
             .attr("marker-end", "url(#marker)" );
 
         links.attr('class','link')
@@ -466,6 +469,11 @@ export default {
             .text(function(d) {
                 return d.relation
             })
+        
+        linksText.append('textPath')
+            .attr('xlink:href',function(d,i){ return '#edgepath'})
+            .style('pointer-events','none')
+            .text(function(d){return d.relation})
 
         function dragStart(d) {
             if (!d3.event.active) {
