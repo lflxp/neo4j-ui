@@ -254,7 +254,15 @@ export default {
           cb(results);
       },
       search() {
-        console.log('search')
+        if (this.cql == '') {
+            this.$message.error('请输入neo4j查询语句')
+            return
+        }
+
+        var arg = { "cql" : this.cql }
+        nodes = []
+        edges = []
+        
       }
     },
     created() {
@@ -331,7 +339,7 @@ export default {
             .attr('markerHeight', 12)
             .attr('orient', 'auto')
             .attr("stroke-width",4)//箭头宽度
-            .append('path')
+            .append('svg:path')
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill","#000000");
  
