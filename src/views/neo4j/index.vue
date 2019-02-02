@@ -267,7 +267,7 @@ export default {
         let marge = { top: 160, bottom: 60, left: 160, right: 60 }
         let width = `${document.documentElement.clientWidth}`
         // let height = 600
-        let height = `${document.documentElement.clientHeight}`/2
+        let height = `${document.documentElement.clientHeight}`/1.5
        
         function ticked() {
             links
